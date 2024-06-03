@@ -3,8 +3,9 @@ class Enemy {
         this.game = game;
         this.spriteWidth = 100;
         this.spriteHeight = 100;
-        this.width = this.spriteWidth;
-        this.height = this.spriteHeight;
+        this.sizeModifier = Math.random() * 0.6 + 0.8;
+        this.width = this.spriteWidth * this.sizeModifier; 
+        this.height = this.spriteHeight * this.sizeModifier;
         this.x;
         this.y;
         this.speedX;
@@ -78,9 +79,12 @@ class Enemy {
     draw() {
         if (!this.free) {
             this.game.ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
-            this.game.ctx.strokeRect(this.x, this.y, this.width, this.height);
+            
+            if (this.game.debug) {
+                this.game.ctx.strokeRect(this.x, this.y, this.width, this.height);
 
-            this.game.ctx.fillText(this.lives, this.x + this.width * 0.5, this.y + this.height * 0.5);
+                this.game.ctx.fillText(this.lives, this.x + this.width * 0.5, this.y + this.height * 0.5);
+            }
         }
     }
 }
@@ -95,7 +99,7 @@ class BeetleMorph extends Enemy {
         super.start();
         this.speedX = 0;
         this.speedY = Math.random() * 2 + 0.2;
-        this.lives = 2;
+        this.lives = 1;
         this.lastFrame = 3;
     }
 

@@ -13,12 +13,13 @@ class Game {
 
         this.score = 0;
         this.lives;
-        this.winningScore = 30;
+        this.winningScore = 20;
         this.message1 = "Run!";
         this.message2 = "Or get eaten!";
         this.message3 = 'Press "ENTER" or "R" to start!';
         this.gameOver = true;
         this.crewImage = document.getElementById("crew");
+        this.debug = false;
 
         this.spriteTimer = 0;
         this.spriteInterval = 150;
@@ -79,6 +80,8 @@ class Game {
                 this.start();
             } else if (e.key === ' ' || e.key.toLowerCase() === "f") {
                 this.toggleFullScreen();
+            } else if (e.key.toLowerCase() === "d") {
+                this.debug = !this.debug;
             }
         });
     }
@@ -207,8 +210,11 @@ class Game {
 
         if (!this.gameOver) this.handleEnemies(deltaTime);
 
+        for (let i = this.enemyPool.length - 1; i >= 0; i--) {
+            this.enemyPool[i].update();
+        }
+
         this.enemyPool.forEach(enemy => {
-            enemy.update();
             enemy.draw();
         }); 
     }
