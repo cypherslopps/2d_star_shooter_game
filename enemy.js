@@ -12,6 +12,8 @@ class Enemy {
         this.speedY;
         this.frameX;
         this.lastFrame;
+        this.minFrame;
+        this.maxFrame;
         this.frameY;
         this.lives;
         this.free = true;
@@ -111,4 +113,40 @@ class BeetleMorph extends Enemy {
             }
         }
     }
+}
+
+class LobsterMorph extends Enemy {
+     constructor(game) {
+        super(game);
+        this.image = document.getElementById("lobstermorph");
+        this.lastFrame = 14;
+     }
+
+     start() {
+        super.start();
+        this.speedX = 0;
+        this.speedY = Math.random() * 0.5 + 0.2;
+        this.lives = 3;
+     }
+
+     update() {
+        super.update();
+
+        if (!this.free) {
+            if (this.isAlive()) {
+                if (this.lives >= 3) {
+                    this.maxFrame = 0;
+                } else if (this.lives == 2) {
+                    this.maxFrame = 3;
+                } else if (this.lives === 1) {
+                    this.maxFrame = 7;
+                }
+                
+                this.hit();
+                if (this.frameX < this.maxFrame && this.game.spriteUpdate) {
+                    this.frameX++;
+                }
+            }
+        } 
+     }
 }

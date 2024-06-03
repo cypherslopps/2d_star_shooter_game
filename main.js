@@ -134,7 +134,13 @@ class Game {
 
     createEnemyPool() {
         for(let i = 0; i < this.numberOfEnemies; i++) {
-            this.enemyPool.push(new BeetleMorph(this));
+            const randomNumber = Math.random();
+            
+            if (randomNumber < 0.8) {
+                this.enemyPool.push(new LobsterMorph(this));
+            } else {
+                this.enemyPool.push(new BeetleMorph(this));
+            }
         }
     }
 
