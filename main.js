@@ -1,3 +1,24 @@
+class AudioControl {
+    constructor() {
+        this.newGame = document.getElementById("newgame");
+        this.boom1 = document.getElementById("boom1");
+        this.boom2 = document.getElementById("boom2");
+        this.boom3 = document.getElementById("boom3");
+        this.boom4 = document.getElementById("boom4");
+        this.slide = document.getElementById("slide");
+        this.win = document.getElementById("win");
+        this.lose = document.getElementById("lose");
+        this.scream = document.getElementById("scream");
+
+        this.boomSounds = [this.boom1, this.boom2, this.boom3, this.boom4];
+    }
+
+    play(audio) {
+        audio.currentTime = 0;
+        audio.play();
+    }
+}
+
 class Game {
     constructor(canvas, ctx) {
         this.canvas = canvas;
@@ -25,6 +46,8 @@ class Game {
         this.spriteTimer = 0;
         this.spriteInterval = 150;
         this.spriteUpdate = false;
+
+        this.sound = new AudioControl();
 
         this.mouse = {
             x: undefined,
@@ -102,6 +125,8 @@ class Game {
             const enemy = this.getEnemy();
             if (enemy) enemy.start();
         }
+
+        this.sound.newGame.play();
     }
 
     toggleFullScreen() {
@@ -146,13 +171,14 @@ class Game {
 
     createEnemyPool() {
         for(let i = 0; i < this.numberOfEnemies; i++) {
-            const randomNumber = Math.random();
+            // const randomNumber = Math.random();
             
-            if (randomNumber < 0.8) {
-                this.enemyPool.push(new LobsterMorph(this));
-            } else {
-                this.enemyPool.push(new BeetleMorph(this));
-            }
+            // if (randomNumber < 0.8) {
+            //     this.enemyPool.push(new LobsterMorph(this));
+            // } else {
+            //     this.enemyPool.push(new BeetleMorph(this));
+            // }
+            this.enemyPool.push(new PhantomMorph(this));
         }
     }
 
@@ -179,9 +205,11 @@ class Game {
             if (this.lives < 1) {
                 this.message1 = 'Aargh!';
                 this.message2 = 'The crew was eaten';
+                this.sound.play(this.sound.lose);
             } else if (this.score >= this.winningScore) {
                 this.message1 = 'Well done!';
                 this.message2 = 'You escaped the swarm!';
+                this.sound.play(this.sound.win);
             }
         }
     }
@@ -231,7 +259,7 @@ class Game {
         if (!this.gameOver) this.handleEnemies(deltaTime);
 
         for (let i = this.enemyPool.length - 1; i >= 0; i--) {
-            this.enemyPool[i].update();
+            this.enemyPool[i].update(deltaTime);
         }
 
         this.enemyPool.forEach(enemy => {
