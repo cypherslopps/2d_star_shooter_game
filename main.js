@@ -18,7 +18,8 @@ class Game {
         this.message2 = "Or get eaten!";
         this.message3 = 'Press "ENTER" or "R" to start!';
         this.gameOver = true;
-        this.crewImage = document.getElementById("crew");
+        this.crewImage = document.getElementById("crewSprite");
+        this.crewMembers = [];
         this.debug = false;
 
         this.spriteTimer = 0;
@@ -91,6 +92,7 @@ class Game {
         this.score = 0;  
         this.lives = 15;
         this.gameOver = false;
+        this.generateCrew();
 
         // Reset all enemies
         this.enemyPool.forEach(enemy => enemy.reset());
@@ -108,6 +110,16 @@ class Game {
         } else if (document.exitFullscreen) {
           document.exitFullscreen();
         }
+    }
+
+    generateCrew() {
+     this.crewMembers = [];
+     for (let i = 0; i < this.lives; i++) {
+        this.crewMembers.push({
+            frameX: Math.floor(Math.random() * 5),
+            frameY: Math.floor(Math.random() * 5)
+        })
+     }   
     }
 
     resize(width, height) {
@@ -190,7 +202,9 @@ class Game {
         this.ctx.fillText('Score: ' + this.score, 20, 40);
 
         for (let i = 0; i < this.lives; i++) {
-            this.ctx.drawImage(this.crewImage, 165 + 15.3 * i, 23, 13, 30);
+            const w = 20;
+            const h = 45;
+            this.ctx.drawImage(this.crewImage, w * this.crewMembers[i].frameX, h * this.crewMembers[i].frameY, w, h, 20 + 17 * i, 60, w, h); 
         }
 
         if (this.lives < 1 || this.score >= this.winningScore) {
